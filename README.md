@@ -51,13 +51,13 @@ Build & Run (Windows PowerShell)
 
 - Replay tetikleme (örnek):
   PowerShell:
-  Invoke-RestMethod -Method Post -Uri "http://localhost:8080/replays/from-beginning?maxRecords=100"
+  Invoke-RestMethod -Method Post -Uri "http://localhost:8082/replays/from-beginning?maxRecords=100"
 
   curl:
-  curl -X POST "http://localhost:8080/replays/from-beginning?maxRecords=100"
+  curl -X POST "http://localhost:8082/replays/from-beginning?maxRecords=100"
 
 - Replay job listesini alma:
-  curl "http://localhost:8080/replays"
+  curl "http://localhost:8082/replays"
 
 API'ler
 

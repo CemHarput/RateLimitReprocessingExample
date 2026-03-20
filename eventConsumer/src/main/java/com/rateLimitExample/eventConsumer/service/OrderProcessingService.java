@@ -15,10 +15,11 @@ public class OrderProcessingService {
 	private static final Logger log = LoggerFactory.getLogger(OrderProcessingService.class);
 
 	private final RateLimiter consumerRateLimiter;
-	private final ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
+	private final ObjectMapper objectMapper;
 
-	public OrderProcessingService(RateLimiter consumerRateLimiter) {
+	public OrderProcessingService(RateLimiter consumerRateLimiter, ObjectMapper objectMapper) {
 		this.consumerRateLimiter = consumerRateLimiter;
+		this.objectMapper = objectMapper;
 	}
 
 	public void process(String rawEvent, String source, int partition, long offset) {
