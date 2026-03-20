@@ -66,45 +66,6 @@ API'ler
 - GET /replays
   - Mevcut replay işlerinin snapshot listesini döner.
 
-Neden IDE (IntelliJ) `ReplayJobState` / `ReplayJobStatus` importlarını bulamıyor olabilir?
 
-Eğer IDE sınıfların dosya sisteminde var olduğunu görüyorsa ama importları kırmızı gösteriyorsa ("cannot resolve symbol" vb.), yaygın sebepler:
 
-1. Java sürümü / language level uyumsuzluğu:
-   - `ReplayJobStatus` bir Java `record` olarak tanımlanmış (record'lar Java 16+ ile tanıtıldı; modern projelerde Java 17+ veya daha yeni bir JDK kullanılıyor). Projenin `pom.xml` içinde `<java.version>21</java.version>` olarak gözüküyor. IntelliJ'de proje SDK ve module language level'ın bu sürüme uygun olduğundan emin olun.
 
-2. Maven multi-module projesi IDE'ye tam import edilmemiş olabilir:
-   - Root `pom.xml`'i (aggregator) IntelliJ'e import edin veya Maven tool window'dan "Reimport" yapın.
-
-3. `src/main/java` klasörü kaynak kökü (source root) olarak işaretlenmemiş olabilir.
-
-4. IntelliJ cache / index hatası:
-   - Caches'te bozulma olmuş olabilir; "Invalidate Caches / Restart" işe yarayabilir.
-
-5. OneDrive gibi senkronize klasörlerde dosya kilitlenmesi veya path sorunları:
-   - Bazen OneDrive bulut senkronizasyonu IDE ile çakışır. Gerekirse projeyi OneDrive dışına taşıyıp tekrar import edin.
-
-Adım adım IntelliJ düzeltme önerisi
-
-1. IntelliJ → File → Project Structure → Project: Project SDK ve Project language level'ı `17` veya `21` (pom'daki `<java.version>`) olarak ayarlayın.
-2. IntelliJ → View → Tool Windows → Maven → projeyi seçip *Reload All Maven Projects* (yeniden import) yapın.
-3. File → Project Structure → Modules → `eventConsumer` modülünü seçin. `src/main/java` klasörünün Sources (mavi) olarak işaretli olduğundan emin olun.
-4. Terminal'den temiz ve derleme yapın:
-   .\eventConsumer\mvnw clean package -DskipTests
-   Derleme başarılı ise `eventConsumer/target/classes/com/rateLimitExample/eventConsumer/model/ReplayJobStatus.class` dosyası oluşmuş olmalıdır.
-5. Eğer hala sorun varsa: File → Invalidate Caches / Restart → Invalidate and Restart.
-6. Eğer diğer modüller (`eventProducer`) consumer model tiplerini doğrudan import etmeye çalışıyorsa, bu kötü bir bağımlılıktır. Ortak tipleri `common` adlı yeni bir modulde toplayıp her iki modüle bağımlılık olarak eklemeyi düşünün.
-
-Kısa notlar / tavsiyeler
-
-- Proje `record` kullanıyor; IDEA ve Project SDK >= 17 olmalı.
-- Maven build başarılı ise derleyici (javac) kodu görebiliyor demektir; IDE tarafı ise index/caches ya da import/SDK sorununa işaret eder.
-- Eğer producer modülü consumer model sınıflarını doğrudan kullanıyorsa, shared tipleri ayırmak daha temiz bir mimaridir.
-
-Eğer isterseniz ben `rateLimitExample/README.md` dosyasını doğrudan repoya ekledim (bu dosya burada). Ayrıca isterseniz IntelliJ üzerinde adım adım tam olarak hangi ayarı değiştirmeniz gerektiğini ekran görüntüsüyle veya daha ayrıntılı bir rehberle sağlayabilirim.
-
----
-
-Hazır olduğunuzda şu adımlardan birini seçin:
-- README'yi değiştirmemi veya ek açıklama/örnek log/request-response eklememi istiyor musunuz?
-- Şu anki IDE hatasını çözmek için sizin yerinize IntelliJ proje ayarlarında değişiklik yapamam ama adım adım sizi yönlendirebilirim; hangi IDE sürümünü kullanıyorsunuz (IntelliJ IDEA Community/Ultimate ve sürümü)?
